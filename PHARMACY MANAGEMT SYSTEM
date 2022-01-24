@@ -1,0 +1,240 @@
+from logging import RootLogger
+from tkinter import *
+from tkinter import ttk
+from tkinter import messagebox
+import pymysql
+
+class Pharmacy:
+      def __init__(self,root):
+            self.root=root
+            self.root.title("Pharmacy Management System")
+            self.root.geometry("1350x750+0+0")
+            
+
+
+            self.productid=StringVar()
+            self.productname=StringVar()
+            self.productcost=StringVar()
+            self.manufacturingdate=StringVar()
+            self.expirydate=StringVar()
+            self.lotno=StringVar()
+            self.weight=StringVar()
+            self.manufacturedby=StringVar()
+
+
+
+
+
+            headinglbl=Label(root,text="Pharmacy Management System",font=("arial",24,"bold"),bg='wheat',fg='red')
+            headinglbl.pack(side=TOP,fill=X)
+
+
+
+            #***********Frame-1***************
+            entry_frame=Frame(root,bd=5,relief='ridge',bg='wheat')
+            entry_frame.place(x=20,y=50,width=350,height=745)
+
+
+            #----------------Labels of frame-1--------
+            reg_lbl=Label(entry_frame,text="Registration Form",font=("arial",20,"bold"),bg='wheat',fg='red')
+            reg_lbl.grid(row=0,columnspan=2)
+            
+            productid_lbl=Label(entry_frame,text="Product ID.",font=("",13))
+            productid_lbl.grid(row=1,column=0,sticky='w',padx=10,pady=11)
+            
+            productname_lbl=Label(entry_frame,text="Product Name",font=("",13))
+            productname_lbl.grid(row=2,column=0,sticky='w',padx=10,pady=11)
+            
+            
+            productcost_lbl=Label(entry_frame,text="Product Cost",font=("",13))
+            productcost_lbl.grid(row=3,column=0,sticky='w',padx=10,pady=11)
+            
+            
+            manufacturingdate_lbl=Label(entry_frame,text="Manufacturing Date",font=("",13))
+            manufacturingdate_lbl.grid(row=4,column=0,sticky='w',padx=10,pady=11)
+            
+            expirydate_lbl=Label(entry_frame,text="Expiry Date",font=("",13))
+            expirydate_lbl.grid(row=5,column=0,sticky='w',padx=10,pady=11)
+            
+            
+            lotno_lbl=Label(entry_frame,text="Lot No",font=("",13))
+            lotno_lbl.grid(row=6,column=0,sticky='w',padx=10,pady=11)
+            
+            weight_lbl=Label(entry_frame,text="Weight",font=("",13))
+            weight_lbl.grid(row=7,column=0,sticky='w',padx=10,pady=11)
+
+            manufacturedby_lbl=Label(entry_frame,text="Manufacutred By",font=("",13))
+            manufacturedby_lbl.grid(row=8,column=0,sticky='w',padx=10,pady=11)
+
+
+            #---------Entry boxes------------------
+
+
+            productid_entry=Entry(entry_frame,bd=3,relief='ridge',font=("",12),textvariable=self.productid)
+            productid_entry.grid(row=1,column=1,sticky='w',padx=10,pady=11)
+
+            productname_entry=Entry(entry_frame,bd=3,relief='ridge',font=("",12),textvariable=self.productname)
+            productname_entry.grid(row=2,column=1,sticky='w',padx=10,pady=11)
+
+            productcost_entry=Entry(entry_frame,bd=3,relief='ridge',font=("",12),textvariable=self.productcost)
+            productcost_entry.grid(row=3,column=1,sticky='w',padx=10,pady=11)
+
+            manufacturingdate_entry=Entry(entry_frame,bd=3,relief='ridge',font=("",12),textvariable=self.manufacturingdate)
+            manufacturingdate_entry.grid(row=4,column=1,sticky='w',padx=10,pady=11)
+
+            expirydate_entry=Entry(entry_frame,bd=3,relief='ridge',font=("",12),textvariable=self.expirydate)
+            expirydate_entry.grid(row=5,column=1,sticky='w',padx=10,pady=11)
+
+
+
+            lotno_entry=Entry(entry_frame,bd=3,relief='ridge',font=("",12),textvariable=self.lotno)
+            lotno_entry.grid(row=6,column=1,sticky='w',padx=10,pady=11)
+
+
+            weight_entry=Entry(entry_frame,bd=3,relief='ridge',font=("",12),textvariable=self.weight)
+            weight_entry.grid(row=7,column=1,sticky='w',padx=10,pady=11)
+
+            manufacturedby_entry=Entry(entry_frame,bd=3,relief='ridge',font=("",12),textvariable=self.weight)
+            manufacturedby_entry.grid(row=8,column=1,sticky='w',padx=10,pady=11)
+
+
+            #***************Functions*********************
+            def add_data():
+                  if self.productid.get()=="" or self.productname.get()==""  or self.productcost.get()=="" or self.manufacturingdate.get()=="" or self.expirydate.get()=="" or self.lotno.get()!=10:
+                        messagebox.showerror('Error','Required all fields and correct field')
+                  else:
+                        con=pymysql.connect(host='localhost',user='root',password='',database='pharmacy_management_database')
+                        cur=con.cursor()
+                        cur.execute('insert into pharmacy values(%s,%s,%s,%s,%s,%s,%s,%s)',(self.productid.get(),self.productname.get(),self.productcost.get(),self.manufacturingdate.get(),self.expirydate.get(),self.lotno.get(),self.weight.get(),self.manufacturedby.get()))
+                        con.commit()
+                        con.close()	
+                        fetch_data()
+                        clear_data()
+                        messagebox.showinfo('Success','Record has been submitted')
+
+
+            def fetch_data():
+                  con=pymysql.connect(host='localhost',user='root',password='',database='pharmacy_management_database')
+                  cur=con.cursor()
+                  cur.execute('select * from pharmacy')
+                  rows=cur.fetchall()
+                  con.commit()
+                  con.close()
+
+
+            def update_data():
+                  if self.productid.get()=="" or self.productname.get()==""  or self.productcost.get()=="" or self.manufacturingdate.get()=="" or self.expirydate.get()=="" or self.lotno.get()!=10:
+                        messagebox.showerror('Error','Required all fields and correct fields')
+                  else:
+                        con=pymysql.connect(host='localhost',user='root',password='',database='pharmacy_management_database')
+                        cur=con.cursor()
+                        cur.execute('update pharmacy set productid=%s , productname=%s , productcost=%s , manufacturingdate=%s , expirydate=%s , lotno=%s , weight=%s , manufacturedby=%s where productid=%s ',(self.productid.get(),self.productname.get(),self.productcost.get(),self.manufacturingdate.get(),self.expirydate.get(),self.lotno.get(),self.weight.get(),self.manufacturedby.get(),self.productid.get()))
+                        con.commit()
+                        con.close()
+                        messagebox.showinfo('Success','Record has been updated')
+
+
+
+            def delete_data():
+                  con=pymysql.connect(host='localhost',user='root',password='',database='pharmacy_management_database')
+                  cur=con.cursor()
+                  cur.execute('delete from pharmacy where productid=%s ',self.productid.get())
+                  con.commit()
+                  con.close()
+                  messagebox.showinfo('Success','Record has been deleted')
+
+            def clear_data():
+                  self.productid.set("")
+                  self.productname.set("")
+                  self.productcost.set("")
+                  self.manufacturingdate.set("")
+                  self.expirydate.set("")
+                  self.lotno.set("")
+                  self.weight.set("")
+                  self.manufacturedby.set("")
+
+            
+            def focus(e):
+                  cursor=table.focus()
+                  content=table.item(cursor)
+                  row=content['values']
+                  self.productid.set(row[0])
+                  self.productname.set(row[1])
+                  self.productcost.set(row[2])
+                  self.manufacturingdate.set(row[3])
+                  self.expirydate.set(row[4])
+                  self.lotno.set(row[5])
+                  self.weight.set(row[6])
+                  self.manufacturedby.set(row[7])
+                 
+
+
+           #----frame3 buttons-----------------
+            btn_frame=Frame(entry_frame,bd=5,relief='ridge',bg='wheat')
+            btn_frame.place(x=15,y=490,width=310,height=150)
+            
+            
+            add_btn=Button(btn_frame,text='Add',font=("",12),command=add_data,width="7")
+            add_btn.grid(row=0,column=1,padx=50,pady=10)
+            
+            update_btn=Button(btn_frame,text='Update',font=("",12),command=update_data,width="7")
+            update_btn.grid(row=0,column=2,padx=10,pady=10)
+            
+            delete_btn=Button(btn_frame,text='Delete',font=("",12),command=delete_data,width="7")
+            delete_btn.grid(row=1,column=1,padx=50,pady=10)
+            
+            clear_btn=Button(btn_frame,text='Clear',font=("",12),command=clear_data,width="7")
+            clear_btn.grid(row=1,column=2,padx=10,pady=10)
+
+
+            #***********Frame-2***************
+            data_frame=Frame(root,bd=5,relief='ridge',bg='wheat')
+            data_frame.place(x=380,y=50,width=1145,height=745)
+
+
+            #************Frame-3 Treeview***************
+            view_frame=Frame(data_frame,bd=5,relief='ridge',bg='wheat')
+            view_frame.place(x=20,y=100,width=1080,height=620)
+            
+            
+            x_scroll=Scrollbar(view_frame,orient=HORIZONTAL)
+            y_scroll=Scrollbar(view_frame,orient=VERTICAL)
+            table=ttk.Treeview(view_frame,columns=('productid','productname','productcost','manufacturingdate','expirydate','lotno','weight','manufacturedby'),xscrollcommand=x_scroll.set,yscrollcommand=y_scroll.set)
+            x_scroll.pack(side=BOTTOM,fill=X)
+            y_scroll.pack(side=RIGHT,fill=Y)
+            x_scroll.configure(command=table.xview)
+            y_scroll.configure(command=table.yview)
+            
+            table.heading("productid",text="productid")
+            table.heading("productname",text="productname")
+            table.heading("productcost",text="productcost")
+            table.heading("manufacturingdate",text="manufacturingdate")
+            table.heading("expirydate",text="expirydate")
+            table.heading("lotno",text="lotno")
+            table.heading("weight",text="weight")
+            
+            table.column("productid",width=100)
+            table.column("productname",width=100)
+            table.column("productcost",width=100)
+            table.column("manufacturingdate",width=100)
+            table.column("expirydate",width=100)
+            table.column("lotno",width=100)
+            table.column("weight",width=100)
+            table.column("manufacturedby",width=100)
+      
+            table['show']='headings'
+            table.bind('<ButtonRelease-1>',focus)
+            fetch_data()
+            table.pack(fill=BOTH,expand=1)
+
+
+
+
+
+
+
+
+root=Tk()
+ob=Pharmacy(root)
+root.mainloop()
+
